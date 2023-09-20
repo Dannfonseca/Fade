@@ -1,0 +1,176 @@
+/*  configurations and variables */
+:root {
+    --before-opacity: 0;
+    --after-opacity: 1;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+  }
+  
+  /* utility classes */
+  .center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .round {
+    border-radius: 50%;
+  }
+  
+  /* sizes and filters */
+  .outer,
+  .middle,
+  .inner {
+    overflow: hidden;
+    height: 100%;
+  }
+  
+  .outer {
+    width: 100%;
+    padding: 100px;
+    z-index: 1;
+  }
+  
+  .middle {
+    filter: brightness(60%);
+    padding: 200px;
+    z-index: 2;
+  }
+  
+  .inner {
+    z-index: 3;
+    aspect-ratio: 1;
+    filter: brightness(150%);
+  }
+  
+  /* style to create the background */
+  :is(.outer, .middle, .inner)::before,
+  :is(.outer, .middle, .inner)::after {
+    content: "";
+    position: absolute;
+    background: var(--image-1);
+    background-size: 100vw 100vh;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    transition: opacity 1.5s ease-out;
+  }
+  
+  :is(.outer, .middle, .inner)::after {
+    opacity: var(--after-opacity); 
+  }
+  
+  :has(.outer.active) :is(.outer, .middle, .inner)::after {
+    transition-delay: var(--spin-delay);
+    animation: spin 1.5s ease-out var(--spin-delay) 1 forwards;
+  }
+  
+  :is(.outer, .middle, .inner)::before {
+    opacity: var(--before-opacity); 
+  }
+  
+  :has(.outer.active) :is(.outer, .middle, .inner)::before {
+    transition-delay: var(--spin-delay);
+    animation: spin 1.5s ease-out var(--spin-delay) 1 forwards;
+  }
+  
+  /* positionings to make image feel "connected" */
+  .outer::before,
+  .outer::after {
+    --spin-delay: 0.3s;
+    background-position: center;
+  }
+  
+  .middle::before,
+  .middle::after {
+    --spin-delay: 0.1s;
+    background-position: var(--middle-position);
+  }
+  
+  .inner::before,
+  .inner::after {
+    --spin-delay: 0s;
+    background-position: var(--inner-position);
+  }
+  
+  .title {
+    position: fixed;
+    z-index: 4;
+    font-size: 40px;
+    letter-spacing: 10px;
+    color: white;
+    overflow: hidden;
+  }
+  
+  .title.one {
+    transform-origin: top;
+  }
+  
+  .title.one.active {
+    animation: title-change 0.5s ease-in-out 0s 1 forwards;
+  }
+  
+  .title.two {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+  
+  .title.two.active {
+    animation: title-change 0.5s ease-in-out 0s 1 forwards reverse;
+  }
+  
+  @keyframes title-change {
+    from {
+      transform: scaleY(1);
+    }
+    to {
+      transform: scaleY(0);
+    }
+  }
+  
+  button {
+    cursor: pointer;
+    position: fixed;
+    transform: translateY(50px);
+    z-index: 4;
+    background-color: white;
+    border-radius: 100px;
+    padding: 10px 20px;
+    transition: background-color 0.5s ease;
+  }
+  
+  button[disabled] {
+    pointer-events: none;
+    cursor: not-allowed;
+    background-color: gray;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotateZ(0);
+    }
+    50% {
+      transform: rotateZ(1turn) scale(1.4);
+      filter: blur(20px);
+    }
+    to {
+      filter: blur(0px);
+      transform: rotateZ(1turn) scale(1);
+    }
+  }
+  
